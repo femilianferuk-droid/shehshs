@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MonkeyGram - Мессенджер 🐵</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            min-height: 700px;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            padding: 20px;
+            border-right: 1px solid #e9ecef;
+        }
+
+        .main-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .module-title {
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            font-size: 1.3rem;
+        }
+
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .function-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .function-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .function-card h4 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .function-card button {
+            width: 100%;
+            padding: 8px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .function-card button:hover {
+            background: #5a67d8;
+        }
+
+        .demo-controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid #667eea;
+        }
+
+        .demo-controls h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .input-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .log-output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1a1a1a;
+            color: #00ff00;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .user-info {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .status-online {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-offline {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .monkey-icon {
+            font-size: 2.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .function-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="monkey-icon">🐵</span> MonkeyGram</h1>
+            <p>Полнофункциональный мессенджер в одном файле</p>
+        </div>
+
+        <div class="app-container">
+            <div class="sidebar">
+                <div class="user-info" id="userInfo">
+                    <h3>Не авторизован</h3>
+                    <p>Статус: <span id="userStatus" class="status-offline">Оффлайн</span></p>
+                </div>
+
+                <div class="module-section">
+                    <h3 class="module-title">Модули мессенджера</h3>
+                    <div class="button-group" style="flex-direction: column;">
+                        <button class="btn btn-primary" onclick="showModule('core')">Core (Базовые функции)</button>
+                        <button class="btn btn-primary" onclick="showModule('experience')">Experience (Общение)</button>
+                        <button class="btn btn-primary" onclick="showModule('security')">Security (Безопасность)</button>
+                        <button class="btn btn-primary" onclick="showModule('productivity')">Productivity</button>
+                        <button class="btn btn-primary" onclick="showModule('customization')">Customization</button>
+                        <button class="btn btn-primary" onclick="showModule('technical')">Technical</button>
+                    </div>
+                </div>
+
+                <div class="module-section">
+                    <h3 class="module-title">Быстрые действия</h3>
+                    <button class="btn btn-success" onclick="runDemo()">Запустить демо</button>
+                    <button class="btn btn-secondary" onclick="clearLog()" style="margin-top: 10px;">Очистить логи</button>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div id="moduleContent">
+                    <!-- Контент модулей будет загружаться здесь -->
+                    <div class="module-section">
+                        <h2 class="module-title">Добро пожаловать в MonkeyGram! 🐵</h2>
+                        <p>Выберите модуль в боковой панели для начала работы.</p>
+                        <p>Или нажмите "Запустить демо" для тестирования всех функций.</p>
+                    </div>
+                </div>
+
+                <div class="demo-controls">
+                    <h3>Консоль выполнения</h3>
+                    <div class="log-output" id="logOutput">
+// Логи будут отображаться здесь...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MonkeyGram - Полный мессенджер в одном файле
+        // Весь код JavaScript находится ниже
+
+        class EventBus {
+            constructor() {
+                this.listeners = new Map();
+            }
+
+            on(event, callback) {
+                if (!this.listeners.has(event)) {
+                    this.listeners.set(event, []);
+                }
+                this.listeners.get(event).push(callback);
+            }
+
+            emit(event, data) {
+                if (this.listeners.has(event)) {
+                    this.listeners.get(event).forEach(callback => {
+                        try {
+                            callback(data);
+                        } catch (e) {
+                            this.log(`Ошибка в обработчике события ${event}: ${e.message}`);
+                        }
+                    });
+                }
+            }
+
+            off(event, callback) {
+                if (this.listeners.has(event)) {
+                    const filtered = this.listeners.get(event).filter(cb => cb !== callback);
+                    this.listeners.set(event, filtered);
+                }
+            }
+        }
+
+        class MonkeyGram {
+            constructor() {
+                this.eventBus = new EventBus();
+                this.store = {
+                    users: [],
+                    chats: [],
+                    messages: [],
+                    channels: [],
+                    polls: [],
+                    calls: [],
+                    blockedUsers: [],
+                    encryptedChats: new Set()
+                };
+                this.currentUser = null;
+                this.settings = {
+                    theme: 'light',
+                    privacy: {
+                        lastSeen: 'everyone'
+                    },
+                    autoDownload: {
+                        wifi: true,
+                        mobile: false,
+                        roaming: false
+                    }
+                };
+
+                // Инициализация модулей
+                this.core = new CoreModule(this);
+                this.experience = new ExperienceModule(this);
+                this.security = new SecurityModule(this);
+                this.productivity = new ProductivityModule(this);
+                this.customization = new CustomizationModule(this);
+                this.technical = new TechnicalModule(this);
+
+                // Подписка на события
+                this.setupEventListeners();
+                
+                this.log('MonkeyGram инициализирован! 🐵');
+            }
+
+            setupEventListeners() {
+                this.eventBus.on('user:registered', (user) => {
+                    this.log(`Пользователь зарегистрирован: ${user.name}`);
+                });
+
+                this.eventBus.on('user:loggedIn', (user) => {
+                    this.currentUser = user;
+                    this.updateUserInfo();
+                    this.log(`Пользователь вошел: ${user.name}`);
+                });
+
+                this.eventBus.on('user:loggedOut', () => {
+                    this.log('Пользователь вышел из системы');
+                });
+
+                this.eventBus.on('message:sent', (data) => {
+                    this.log(`Сообщение отправлено в чат ${data.chatId}: ${data.text}`);
+                });
+
+                this.eventBus.on('message:edited', (data) => {
+                    this.log(`Сообщение отредактировано: ${data.messageId}`);
+                });
+
+                this.eventBus.on('chat:created', (chat) => {
+                    this.log(`Чат создан: ${chat.name} (ID: ${chat.id})`);
+                });
+
+                this.eventBus.on('encryption:enabled', (chatId) => {
+                    this.log(`Шифрование включено для чата: ${chatId}`);
+                });
+            }
+
+            log(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = `[${timestamp}] ${message}\n`;
+                const logOutput = document.getElementById('logOutput');
+                if (logOutput) {
+                    logOutput.textContent += logEntry;
+                    logOutput.scrollTop = logOutput.scrollHeight;
+                }
+                console.log(`MonkeyGram: ${message}`);
+            }
+
+            updateUserInfo() {
+                const userInfo = document.getElementById('userInfo');
+                const userStatus = document.getElementById('userStatus');
+                
+                if (this.currentUser) {
+                    userInfo.innerHTML = `
+                        <h3>${this.currentUser.name}</h3>
+                        <p>Email: ${this.currentUser.email}</p>
+                        <p>Статус: <span id="userStatus" class="status-online">Онлайн</span></p>
+                    `;
+                } else {
+                    userInfo.innerHTML = `
+                        <h3>Не авторизован</h3>
+                        <p>Статус: <span id="userStatus" class="status-offline">Оффлайн</span></p>
+                    `;
+                }
+            }
+
+            // Вспомогательные методы
+            _generateId() {
+                return Math.random().toString(36).substr(2, 9);
+            }
+
+            _findUserById(userId) {
+                return this.store.users.find(u => u.id === userId);
+            }
+
+            _findChatById(chatId) {
+                return this.store.chats.find(c => c.id === chatId);
+            }
+
+            _findMessageById(messageId) {
+                return this.store.messages.find(m => m.id === messageId);
+            }
+        }
+
+        // Модуль Core (Базовые функции)
+        class CoreModule {
+            constructor(app) {
+                this.app = app;
+            }
+
+            registerUser(email, password, name = 'Пользователь') {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const user = {
+                            id: this.app._generateId(),
+                            email,
+                            password, // В реальном приложении нужно хэшировать!
+                            name,
+                            avatar: null,
+                            status: 'online',
+                            lastSeen: new Date()
+                        };
+
+                        this.app.store.users.push(user);
+                        this.app.eventBus.emit('user:registered', user);
+                        
+                        this.app.log(`Регистрация: ${name} (${email})`);
+                        resolve(user);
+                    }, 500);
+                });
+            }
+
+            loginUser(email, password) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        const user = this.app.store.users.find(u => 
+                            u.email === email && u.password === password
+                        );
+
+                        if (user) {
+                            user.lastSeen = new Date();
+                            user.status = 'online';
+                            this.app.eventBus.emit('user:loggedIn', user);
+                            resolve(user);
+                        } else {
+                            this.app.log('Ошибка входа: неверные данные');
+                            reject(new Error('Неверный email или пароль'));
+                        }
+                    }, 500);
+                });
+            }
+
+            updateUserProfile(profileData) {
+                if (!this.app.currentUser) {
+                    throw new Error('Пользователь не авторизован');
+                }
+
+                Object.assign(this.app.currentUser, profileData);
+                this.app.log(`Профиль обновлен: ${JSON.stringify(profileData)}`);
+                this.app.updateUserInfo();
+                return Promise.resolve(this.app.currentUser);
+            }
+
+            setUserStatus(status) {
+                if (!this.app.currentUser) {
+                    throw new Error('Пользователь не авторизован');
+                }
+
+                this.app.currentUser.status = status;
+                this.app.log(`Статус изменен на: ${status}`);
+                this.app.updateUserInfo();
+                return Promise.resolve();
+            }
+
+            sendTextMessage(chatId, text) {
+                if (!this.app.currentUser) {
+                    throw new Error('Пользователь не авторизован');
+                }
+
+                const message = {
+                    id: this.app._generateId(),
+                    chatId,
+                    senderId: this.app.currentUser.id,
+                    text,
+                    timestamp: new Date(),
+                    edited: false,
+                    deleted: false
+                };
+
+                // Проверка шифрования
+                if (this.app.store.encryptedChats.has(chatId)) {
+                    message.encrypted = true;
+                    message.text = this._encryptText(text);
+                }
+
+                this.app.store.messages.push(message);
+                this.app.eventBus.emit('message:sent', { chatId, text, messageId: message.id });
+                
+                return Promise.resolve(message);
+            }
+
+            sendMediaMessage(chatId, file) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const message = {
+                            id: this.app._generateId(),
+                            chatId,
+                            senderId: this.app.currentUser.id,
+                            type: 'media',
+                            file,
+                            timestamp: new Date()
+                        };
+                        
+                        this.app.store.messages.push(message);
+                        this.app.log(`Медиа отправлено в чат ${chatId}: ${file.name || file.type}`);
+                        resolve(message);
+                    }, 300);
+                });
+            }
+
+            editMessage(messageId, newText) {
+                const message = this.app._findMessageById(messageId);
+                
+                if (!message) {
+                    throw new Error('Сообщение не найдено');
+                }
+
+                if (message.senderId !== this.app.currentUser.id) {
+                    throw new Error('Нельзя редактировать чужое сообщение');
+                }
+
+                message.text = newText;
+                message.edited = true;
+                message.editTimestamp = new Date();
+
+                this.app.eventBus.emit('message:edited', { messageId, newText });
+                return Promise.resolve(message);
+            }
+
+            deleteMessage(messageId, forEveryone = false) {
+                const message = this.app._findMessageById(messageId);
+                
+                if (!message) {
+                    throw new Error('Сообщение не найдено');
+                }
+
+                if (forEveryone || message.senderId === this.app.currentUser.id) {
+                    message.deleted = true;
+                    this.app.log(`Сообщение удалено: ${messageId}`);
+                } else {
+                    // Только для текущего пользователя
+                    // В реальном приложении нужно хранить отдельные состояния
+                    this.app.log(`Сообщение скрыто для вас: ${messageId}`);
+                }
+
+                return Promise.resolve();
+            }
+
+            createGroupChat(name, userIds) {
+                const chat = {
+                    id: this.app._generateId(),
+                    name,
+                    type: 'group',
+                    userIds: [...userIds, this.app.currentUser.id],
+                    createdBy: this.app.currentUser.id,
+                    createdAt: new Date(),
+                    pinnedMessage: null
+                };
+
+                this.app.store.chats.push(chat);
+                this.app.eventBus.emit('chat:created', chat);
+                
+                return Promise.resolve(chat);
+            }
+
+            addUserToChat(chatId, userId) {
+                const chat = this.app._findChatById(chatId);
+                
+                if (!chat) {
+                    throw new Error('Чат не найден');
+                }
+
+                if (!chat.userIds.includes(userId)) {
+                    chat.userIds.push(userId);
+                    this.app.log(`Пользователь ${userId} добавлен в чат ${chat.name}`);
+                }
+
+                return Promise.resolve(chat);
+            }
+
+            _encryptText(text) {
+                // Заглушка для шифрования
+                return btoa(text); // Base64 для демонстрации
+            }
+
+            _decryptText(encryptedText) {
+                // Заглушка для дешифрования
+                return atob(encryptedText);
+            }
+        }
+
+        // Модуль Experience (Улучшение общения)
+        class ExperienceModule {
+            constructor(app) {
+                this.app = app;
+                this.activeCalls = new Map();
+            }
+
+            sendVoiceMessage(chatId, audioBlob) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const message = {
+                            id: this.app._generateId(),
+                            chatId,
+                            senderId: this.app.currentUser.id,
+                            type: 'voice',
+                            duration: audioBlob.duration || 5,
+                            timestamp: new Date()
+                        };
+                        
+                        this.app.store.messages.push(message);
+                        this.app.log(`Голосовое сообщение отправлено в чат ${chatId}`);
+                        resolve(message);
+                    }, 300);
+                });
+            }
+
+            startVoiceCall(chatId) {
+                const callId = this.app._generateId();
+                const call = {
+                    id: callId,
+                    chatId,
+                    type: 'voice',
+                    participants: [this.app.currentUser.id],
+                    startTime: new Date(),
+                    active: true
+                };
+
+                this.app.store.calls.push(call);
+                this.activeCalls.set(callId, call);
+                
+                this.app.log(`Голосовой звонок начат в чате ${chatId}`);
+                return Promise.resolve(call);
+            }
+
+            startVideoCall(chatId) {
+                const callId = this.app._generateId();
+                const call = {
+                    id: callId,
+                    chatId,
+                    type: 'video',
+                    participants: [this.app.currentUser.id],
+                    startTime: new Date(),
+                    active: true,
+                    videoEnabled: true
+                };
+
+                this.app.store.calls.push(call);
+                this.activeCalls.set(callId, call);
+                
+                this.app.log(`Видеозвонок начат в чате ${chatId}`);
+                return Promise.resolve(call);
+            }
+
+            toggleCamera(state) {
+                const activeCall = Array.from(this.activeCalls.values())
+                    .find(call => call.participants.includes(this.app.currentUser.id));
+
+                if (activeCall && activeCall.type === 'video') {
+                    activeCall.videoEnabled = state;
+                    this.app.log(`Камера ${state ? 'включена' : 'выключена'}`);
+                }
+
+                return Promise.resolve();
+            }
+
+            createChannel(name, description) {
+                const channel = {
+                    id: this.app._generateId(),
+                    name,
+                    description,
+                    creatorId: this.app.currentUser.id,
+                    subscribers: [this.app.currentUser.id],
+                    createdAt: new Date(),
+                    isPublic: true
+                };
+
+                this.app.store.channels.push(channel);
+                this.app.log(`Канал создан: ${name}`);
+                
+                return Promise.resolve(channel);
+            }
+        }
+
+        // Модуль Security (Безопасность и конфиденциальность)
+        class SecurityModule {
+            constructor(app) {
+                this.app = app;
+            }
+
+            enableEndToEndEncryption(chatId) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        this.app.store.encryptedChats.add(chatId);
+                        this.app.eventBus.emit('encryption:enabled', chatId);
+                        
+                        // Шифруем существующие сообщения
+                        const messages = this.app.store.messages.filter(m => m.chatId === chatId);
+                        messages.forEach(message => {
+                            if (!message.encrypted) {
+                                message.encrypted = true;
+                                message.text = btoa(message.text);
+                            }
+                        });
+
+                        resolve(true);
+                    }, 1000);
+                });
+            }
+
+            setChatTimer(chatId, duration) {
+                const chat = this.app._findChatById(chatId);
+                if (chat) {
+                    chat.selfDestructTimer = duration;
+                    this.app.log(`Таймер установлен для чата ${chatId}: ${duration} секунд`);
+                }
+                return Promise.resolve();
+            }
+
+            blockUser(userId) {
+                if (!this.app.store.blockedUsers.includes(userId)) {
+                    this.app.store.blockedUsers.push(userId);
+                    this.app.log(`Пользователь заблокирован: ${userId}`);
+                }
+                return Promise.resolve();
+            }
+
+            enableTwoFactorAuth() {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        if (this.app.currentUser) {
+                            this.app.currentUser.twoFactorEnabled = true;
+                            this.app.log('Двухфакторная аутентификация включена');
+                            resolve({ success: true, backupCodes: ['123456', '789012', '345678'] });
+                        } else {
+                            resolve({ success: false, error: 'Пользователь не авторизован' });
+                        }
+                    }, 800);
+                });
+            }
+
+            togglePrivacyLastSeen(mode) {
+                this.app.settings.privacy.lastSeen = mode;
+                this.app.log(`Настройки приватности обновлены: ${mode}`);
+                return Promise.resolve();
+            }
+        }
+
+        // Модуль Productivity (Производительность)
+        class ProductivityModule {
+            constructor(app) {
+                this.app = app;
+            }
+
+            searchMessages(query) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const results = this.app.store.messages
+                            .filter(m => 
+                                m.text && 
+                                m.text.toLowerCase().includes(query.toLowerCase()) &&
+                                !m.deleted
+                            )
+                            .slice(0, 20); // Ограничиваем результаты
+                        
+                        this.app.log(`Поиск сообщений: найдено ${results.length} по запросу "${query}"`);
+                        resolve(results);
+                    }, 300);
+                });
+            }
+
+            pinMessage(chatId, messageId) {
+                const chat = this.app._findChatById(chatId);
+                if (chat) {
+                    chat.pinnedMessage = messageId;
+                    this.app.log(`Сообщение закреплено в чате ${chatId}`);
+                }
+                return Promise.resolve();
+            }
+
+            createPoll(chatId, question, options) {
+                const poll = {
+                    id: this.app._generateId(),
+                    chatId,
+                    question,
+                    options: options.map((opt, idx) => ({
+                        id: idx,
+                        text: opt,
+                        votes: 0,
+                        voters: []
+                    })),
+                    creatorId: this.app.currentUser.id,
+                    createdAt: new Date(),
+                    isActive: true
+                };
+
+                this.app.store.polls.push(poll);
+                this.app.log(`Опрос создан: "${question}"`);
+                
+                return Promise.resolve(poll);
+            }
+
+            remindAboutMessage(messageId, datetime) {
+                const reminder = {
+                    id: this.app._generateId(),
+                    messageId,
+                    userId: this.app.currentUser.id,
+                    remindAt: datetime,
+                    createdAt: new Date()
+                };
+
+                // Имитация планировщика напоминаний
+                setTimeout(() => {
+                    this.app.log(`НАПОМИНАНИЕ: Проверьте сообщение ${messageId}`);
+                }, 1000); // Упрощенная демонстрация
+
+                this.app.log(`Напоминание установлено на ${datetime}`);
+                return Promise.resolve(reminder);
+            }
+        }
+
+        // Модуль Customization (Кастомизация и развлечения)
+        class CustomizationModule {
+            constructor(app) {
+                this.app = app;
+            }
+
+            setAppTheme(themeName) {
+                this.app.settings.theme = themeName;
+                document.body.style.background = themeName === 'dark' 
+                    ? '#1a1a2e' 
+                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                this.app.log(`Тема изменена на: ${themeName}`);
+                return Promise.resolve();
+            }
+
+            setChatWallpaper(chatId, imageUrl) {
+                const chat = this.app._findChatById(chatId);
+                if (chat) {
+                    chat.wallpaper = imageUrl;
+                    this.app.log(`Обои установлены для чата ${chatId}`);
+                }
+                return Promise.resolve();
+            }
+
+            sendGIF(chatId, searchQuery) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const message = {
+                            id: this.app._generateId(),
+                            chatId,
+                            senderId: this.app.currentUser.id,
+                            type: 'gif',
+                            searchQuery,
+                            gifUrl: `https://example.com/gif/${encodeURIComponent(searchQuery)}.gif`,
+                            timestamp: new Date()
+                        };
+                        
+                        this.app.store.messages.push(message);
+                        this.app.log(`GIF отправлен: "${searchQuery}" в чат ${chatId}`);
+                        resolve(message);
+                    }, 400);
+                });
+            }
+
+            playInChatGame(chatId, gameName) {
+                this.app.log(`Игра "${gameName}" запущена в чате ${chatId}`);
+                return Promise.resolve({
+                    gameId: this.app._generateId(),
+                    gameName,
+                    chatId,
+                    players: [this.app.currentUser.id],
+                    startedAt: new Date()
+                });
+            }
+        }
+
+        // Модуль Technical (Технические)
+        class TechnicalModule {
+            constructor(app) {
+                this.app = app;
+            }
+
+            clearChatHistory(chatId) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        // Помечаем сообщения как удаленные
+                        this.app.store.messages
+                            .filter(m => m.chatId === chatId)
+                            .forEach(m => m.deleted = true);
+                        
+                        this.app.log(`История чата ${chatId} очищена`);
+                        resolve(true);
+                    }, 500);
+                });
+            }
+
+            exportChatData(chatId) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const chat = this.app._findChatById(chatId);
+                        const messages = this.app.store.messages
+                            .filter(m => m.chatId === chatId && !m.deleted);
+                        
+                        const exportData = {
+                            chat,
+                            messages,
+                            exportDate: new Date(),
+                            totalMessages: messages.length
+                        };
+
+                        // Имитация скачивания файла
+                        const dataStr = JSON.stringify(exportData, null, 2);
+                        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                        
+                        this.app.log(`Данные чата ${chatId} экспортированы (${messages.length} сообщений)`);
+                        resolve({ data: exportData, downloadUrl: dataUri });
+                    }, 1000);
+                });
+            }
+
+            toggleAutoDownloadMedia(networkType) {
+                if (this.app.settings.autoDownload.hasOwnProperty(networkType)) {
+                    this.app.settings.autoDownload[networkType] = 
+                        !this.app.settings.autoDownload[networkType];
+                    
+                    const state = this.app.settings.autoDownload[networkType] ? 'включено' : 'выключено';
+                    this.app.log(`Автоскачивание для ${networkType}: ${state}`);
+                }
+                return Promise.resolve();
+            }
+        }
+
+        // Инициализация MonkeyGram
+        let messenger = new MonkeyGram();
+
+        // Функции для работы с интерфейсом
+        function showModule(moduleName) {
+            const moduleContent = document.getElementById('moduleContent');
+            let content = '';
+
+            switch(moduleName) {
+                case 'core':
+                    content = `
+                        <div class="module-section">
+                            <h2 class="module-title">Core - Базовые функции</h2>
+                            <div class="function-grid">
+                                <div class="function-card">
+                                    <h4>Регистрация пользователя</h4>
+                                    <button onclick="testRegister()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Вход в систему</h4>
+                                    <button onclick="testLogin()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Отправить сообщение</h4>
+                                    <button onclick="testSendMessage()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Редактировать сообщение</h4>
+                                    <button onclick="testEditMessage()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Создать групповой чат</h4>
+                                    <button onclick="testCreateGroup()">Тестировать</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'experience':
+                    content = `
+                        <div class="module-section">
+                            <h2 class="module-title">Experience - Улучшение общения</h2>
+                            <div class="function-grid">
+                                <div class="function-card">
+                                    <h4>Голосовое сообщение</h4>
+                                    <button onclick="testVoiceMessage()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Голосовой звонок</h4>
+                                    <button onclick="testVoiceCall()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Видеозвонок</h4>
+                                    <button onclick="testVideoCall()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Создать канал</h4>
+                                    <button onclick="testCreateChannel()">Тестировать</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'security':
+                    content = `
+                        <div class="module-section">
+                            <h2 class="module-title">Security - Безопасность</h2>
+                            <div class="function-grid">
+                                <div class="function-card">
+                                    <h4>Включить шифрование</h4>
+                                    <button onclick="testEncryption()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Заблокировать пользователя</h4>
+                                    <button onclick="testBlockUser()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>2FA аутентификация</h4>
+                                    <button onclick="testTwoFactor()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Настройки приватности</h4>
+                                    <button onclick="testPrivacy()">Тестировать</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'productivity':
+                    content = `
+                        <div class="module-section">
+                            <h2 class="module-title">Productivity - Производительность</h2>
+                            <div class="function-grid">
+                                <div class="function-card">
+                                    <h4>Поиск сообщений</h4>
+                                    <button onclick="testSearch()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Закрепить сообщение</h4>
+                                    <button onclick="testPinMessage()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Создать опрос</h4>
+                                    <button onclick="testCreatePoll()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Напоминание</h4>
+                                    <button onclick="testReminder()">Тестировать</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'customization':
+                    content = `
+                        <div class="module-section">
+                            <h2 class="module-title">Customization - Кастомизация</h2>
+                            <div class="function-grid">
+                                <div class="function-card">
+                                    <h4>Сменить тему</h4>
+                                    <button onclick="testChangeTheme()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Отправить GIF</h4>
+                                    <button onclick="testSendGIF()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Игра в чате</h4>
+                                    <button onclick="testChatGame()">Тестировать</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'technical':
+                    content = `
+                        <div class="module-section">
+                            <h2 class="module-title">Technical - Технические</h2>
+                            <div class="function-grid">
+                                <div class="function-card">
+                                    <h4>Очистить историю</h4>
+                                    <button onclick="testClearHistory()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Экспорт данных</h4>
+                                    <button onclick="testExportData()">Тестировать</button>
+                                </div>
+                                <div class="function-card">
+                                    <h4>Автоскачивание</h4>
+                                    <button onclick="testAutoDownload()">Тестировать</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            moduleContent.innerHTML = content;
+        }
+
+        // Тестовые функции
+        function testRegister() {
+            messenger.core.registerUser('user@example.com', 'password123', 'Тестовый пользователь')
+                .then(user => {
+                    messenger.log(`✅ Регистрация успешна: ${user.name}`);
+                })
+                .catch(err => messenger.log(`❌ Ошибка: ${err.message}`));
+        }
+
+        function testLogin() {
+            messenger.core.loginUser('user@example.com', 'password123')
+                .then(user => {
+                    messenger.log(`✅ Вход выполнен: ${user.name}`);
+                })
+                .catch(err => messenger.log(`❌ Ошибка входа: ${err.message}`));
+        }
+
+        function testSendMessage() {
+            if (!messenger.currentUser) {
+                messenger.log('⚠️ Сначала войдите в систему');
+                return;
+            }
+            
+            const chatId = 'chat_' + Date.now();
+            messenger.core.sendTextMessage(chatId, 'Привет, MonkeyGram! 🐵')
+                .then(msg => {
+                    messenger.log(`✅ Сообщение отправлено: "${msg.text}"`);
+                });
+        }
+
+        function testEditMessage() {
+            if (!messenger.currentUser) {
+                messenger.log('⚠️ Сначала войдите в систему');
+                return;
+            }
+            
+            // Сначала создаем сообщение для редактирования
+            const chatId = 'edit_test_chat';
+            messenger.core.sendTextMessage(chatId, 'Старое сообщение')
+                .then(msg => {
+                    setTimeout(() => {
+                        messenger.core.editMessage(msg.id, 'Отредактированное сообщение ✏️')
+                            .then(() => messenger.log('✅ Сообщение отредактировано'));
+                    }, 1000);
+                });
+        }
+
+        function testCreateGroup() {
+            if (!messenger.currentUser) {
+                messenger.log('⚠️ Сначала войдите в систему');
+                return;
+            }
+            
+            messenger.core.createGroupChat('Тестовая группа', ['user1', 'user2', 'user3'])
+                .then(chat => {
+                    messenger.log(`✅ Группа создана: ${chat.name} с ${chat.userIds.length} участниками`);
+                });
+        }
+
+        function testVoiceMessage() {
+            if (!messenger.currentUser) {
+                messenger.log('⚠️ Сначала войдите в систему');
+                return;
+            }
+            
+            messenger.experience.sendVoiceMessage('voice_chat', { duration: 10 })
+                .then(() => messenger.log('✅ Голосовое сообщение отправлено'));
+        }
+
+        function testVoiceCall() {
+            if (!messenger.currentUser) {
+                messenger.log('⚠️ Сначала войдите в систему');
+                return;
+            }
+            
+            messenger.experience.startVoiceCall('call_chat')
+                .then(call => messenger.log(`✅ Голосовой звонок начат: ${call.id}`));
+        }
+
+        function testVideoCall() {
+            if (!messenger.currentUser) {
+                messenger.log('⚠️ Сначала войдите в систему');
+                return;
+            }
+            
+            messenger.experience.startVideoCall('video_chat')
+                .then(call => messenger.log(`✅ Видеозвонок начат: ${call.id}`));
+        }
+
+        function testCreateChannel() {
+            if (!messenger.currentUser) {
+                messenger.log('⚠️ Сначала войдите в систему');
+                return;
+            }
+            
+            messenger.experience.createChannel('Новости MonkeyGram', 'Официальный канал мессенджера')
+                .then(channel => messenger.log(`✅ Канал создан: ${channel.name}`));
+        }
+
+        function testEncryption() {
+            messenger.security.enableEndToEndEncryption('secure_chat')
+                .then(() => messenger.log('✅ Шифрование включено для чата'));
+        }
+
+        function testBlockUser() {
+            messenger.security.blockUser('spam_user')
+                .then(() => messenger.log('✅ Пользователь заблокирован'));
+        }
+
+        function testTwoFactor() {
+            messenger.security.enableTwoFactorAuth()
+                .then(result => {
+                    if (result.success) {
+                        messenger.log('✅ 2FA включена. Коды для восстановления сгенерированы.');
+                    }
+                });
+        }
+
+        function testPrivacy() {
+            messenger.security.togglePrivacyLastSeen('nobody')
+                .then(() => messenger.log('✅ Приватность обновлена: "никто не видит"'));
+        }
+
+        function testSearch() {
+            messenger.productivity.searchMessages('привет')
+                .then(results => {
+                    messenger.log(`✅ Найдено ${results.length} сообщений`);
+                });
+        }
+
+        function testPinMessage() {
+            messenger.productivity.pinMessage('general_chat', 'msg_123')
+                .then(() => messenger.log('✅ Сообщение закреплено'));
+        }
+
+        function testCreatePoll() {
+            messenger.productivity.createPoll('poll_chat', 'Какой модуль вам нравится больше?', 
+                ['Core', 'Security', 'Experience', 'Customization'])
+                .then(poll => messenger.log(`✅ Опрос создан: "${poll.question}"`));
+        }
+
+        function testReminder() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            messenger.productivity.remindAboutMessage('msg_123', tomorrow)
+                .then(() => messenger.log('✅ Напоминание установлено'));
+        }
+
+        function testChangeTheme() {
+            const theme = messenger.settings.theme === 'light' ? 'dark' : 'light';
+            messenger.customization.setAppTheme(theme)
+                .then(() => messenger.log(`✅ Тема изменена на ${theme}`));
+        }
+
+        function testSendGIF() {
+            messenger.customization.sendGIF('fun_chat', 'happy monkey')
+                .then(() => messenger.log('✅ GIF отправлен'));
+        }
+
+        function testChatGame() {
+            messenger.customization.playInChatGame('game_chat', 'Шахматы')
+                .then(game => messenger.log(`✅ Игра "${game.gameName}" запущена`));
+        }
+
+        function testClearHistory() {
+            messenger.technical.clearChatHistory('old_chat')
+                .then(() => messenger.log('✅ История чата очищена'));
+        }
+
+        function testExportData() {
+            messenger.technical.exportChatData('export_chat')
+                .then(result => {
+                    messenger.log(`✅ Данные экспортированы (${result.data.totalMessages} сообщений)`);
+                });
+        }
+
+        function testAutoDownload() {
+            messenger.technical.toggleAutoDownloadMedia('wifi')
+                .then(() => {
+                    const state = messenger.settings.autoDownload.wifi ? 'включено' : 'выключено';
+                    messenger.log(`✅ Автоскачивание для Wi-Fi: ${state}`);
+                });
+        }
+
+        function runDemo() {
+            messenger.log('🚀 Запуск демонстрации MonkeyGram...');
+            
+            // Последовательная демонстрация
+            setTimeout(() => testRegister(), 500);
+            setTimeout(() => testLogin(), 1500);
+            setTimeout(() => testSendMessage(), 2500);
+            setTimeout(() => testEncryption(), 3500);
+            setTimeout(() => testCreateGroup(), 4500);
+            setTimeout(() => testVideoCall(), 5500);
+            setTimeout(() => testCreatePoll(), 6500);
+            setTimeout(() => testChangeTheme(), 7500);
+            setTimeout(() => {
+                messenger.log('🎉 Демонстрация завершена!');
+            }, 8500);
+        }
+
+        function clearLog() {
+            document.getElementById('logOutput').textContent = '// Логи будут отображаться здесь...\n';
+            messenger.log('Логи очищены');
+        }
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            messenger.log('Интерфейс MonkeyGram загружен');
+            messenger.log('Выберите модуль в боковой панели или запустите демо');
+        });
+    </script>
+</body>
+</html>
